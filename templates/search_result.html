@@ -1,0 +1,282 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <title>Django Python Custom CSS Caravan Parts Ecommerce Demo Main page</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap JavaScript ve Popper.js (gerektiğinde) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+     <style>
+   .btn-search {
+        margin-top: 30px; /* Butonu aşağı kaydırma miktarını ayarlayabilirsiniz */
+    }
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+      <a class="navbar-brand" href="/">
+          <img src="{% static 'avrupadakaravan.png' %}" alt="Logo" width="200" height="50">
+      </a>
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'search_result_page' %}">Caravan</a>
+        </li>
+      </ul>
+        <!-- Solid Heart Icon -->
+
+
+
+ <!-- Buttons -->
+        <div class="m-2">
+             <i class="fas fa-heart ml-2"></i>
+        </div>
+        <div class="m-2">
+             <i class="fa-solid fa-bell ml-2"></i>
+        </div>
+
+
+        <div class="m-2">
+             <form class="d-flex" role="search">
+             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+             <button class="btn btn-outline-danger" type="submit">
+                 Search
+             </button>
+             </form>
+        </div>
+         <a href="{% url 'login' %}" type="button" class="btn btn-danger">Login</a>
+
+    </div>
+  </div>
+</nav>
+
+
+<div class="container mt-4">
+
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="card p-3 shadow rounded">
+                    <!-- Filtreler -->
+                <div class="mb-4">
+                    <h3>Categories</h3>
+                    <!-- Filtre Seçenekleri -->
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="filterOption1">
+                        <label class="form-check-label" for="filterOption1">
+                            Category 1
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="filterOption2">
+                        <label class="form-check-label" for="filterOption2">
+                            Category 2
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="filterOption2">
+                        <label class="form-check-label" for="filterOption2">
+                            Category 3
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="filterOption2">
+                        <label class="form-check-label" for="filterOption2">
+                            Category 4
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="filterOption2">
+                        <label class="form-check-label" for="filterOption2">
+                            Category 5
+                        </label>
+                    </div>
+                    <h3 class="card-title mt-3">Categories</h3>
+                    <select class="form-select mt-3" aria-label="Default select example">
+                      <option selected>Select Brand</option>
+                      <option value="1">Brand 1</option>
+                      <option value="2">Brand 2</option>
+                      <option value="3">Brand 3</option>
+                      <option value="3">Brand 4</option>
+                      <option value="3">Brand 5</option>
+                    </select>
+                    <div class="form-check mt-3">
+  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+  <label class="form-check-label" for="flexCheckDefault">
+    New Arrivals
+  </label>
+</div>
+            <div class="form-check mt-3">
+  <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+  <label class="form-check-label" for="flexCheckChecked">
+   Secondary Hand
+  </label>
+</div>
+            <label for="customRange1" class="form-label mt-3">Price range</label>
+            <input type="range" class="form-range mt-3" id="customRange1">
+
+                    <div class="input-group  mt-3 mb-3">
+  <span class="input-group-text">$</span>
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+  <span class="input-group-text">.00</span>
+</div>
+<button type="button" class="btn btn-secondary">
+    <i class="fas fa-filter"></i>&nbsp;&nbsp; Filter</button>
+                    <!-- Diğer Filtre Seçenekleri Ekleyin -->
+                </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="col-lg-9">
+                <div class="card mb-5">
+  <div class="card-header">
+    Search Results
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">244.444 Results</h5>
+    <p class="card-text">Embarking on a journey in a caravan is akin to carrying a home with you on the road.</p>
+  </div>
+</div>
+                <!-- Araç Sonuçları -->
+                <div class="row">
+                    <!-- Araç Kartları -->
+
+                       <div class="col-md-4">
+                        <div class="card mb-4 shadow">
+                            <img src="{% static 'caravan3.jpg' %}" alt="Araç 1" class="card-img-top fixed-height-image">
+                            <div class="card-body">
+                                <h5 class="card-title">Mercedes-Benz C 300</h5>
+                                <p class="card-text">Fahrzeugnummer: 331055
+Ehemalige unverbindliche Preisempfehlung des Automobilherstellers: 67.616 €</p>
+                                <p class="card-text">Price: $51.890</p>
+                                <a href="/detail" class="btn btn-secondary">Detay</a>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="col-md-4">
+                        <div class="card mb-4 shadow">
+                            <img src="{% static 'caravan2.jpg' %}" alt="Araç 1" class="card-img-top fixed-height-image">
+                            <div class="card-body">
+                                <h5 class="card-title">Mercedes-Benz C 300</h5>
+                                <p class="card-text">Fahrzeugnummer: 331055
+Ehemalige unverbindliche Preisempfehlung des Automobilherstellers: 67.616 €</p>
+                                <p class="card-text">Price: $51.890</p>
+                                <a href="/detail" class="btn btn-secondary">Detay</a>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="col-md-4">
+                        <div class="card mb-4 shadow">
+                            <img src="{% static 'caravan3.jpg' %}" alt="Araç 1" class="card-img-top fixed-height-image">
+                            <div class="card-body">
+                                <h5 class="card-title">Mercedes-Benz C 300</h5>
+                                <p class="card-text">Fahrzeugnummer: 331055
+Ehemalige unverbindliche Preisempfehlung des Automobilherstellers: 67.616 €</p>
+                                <p class="card-text">Price: $51.890</p>
+                                <a href="/detail" class="btn btn-secondary">Detay</a>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="col-md-4">
+                        <div class="card mb-4 shadow">
+                            <img src="{% static 'caravan2.jpg' %}" alt="Araç 1" class="card-img-top fixed-height-image">
+                            <div class="card-body">
+                                <h5 class="card-title">Mercedes-Benz C 300</h5>
+                                <p class="card-text">Fahrzeugnummer: 331055
+Ehemalige unverbindliche Preisempfehlung des Automobilherstellers: 67.616 €</p>
+                                <p class="card-text">Price: $51.890</p>
+                                <a href="/detail" class="btn btn-secondary">Detay</a>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <!-- Diğer Araç Kartları Buraya Ekleyin -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<div class="container">
+  <footer class="py-5">
+    <div class="row">
+      <div class="col-6 col-md-2 mb-3">
+        <h5>Section</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
+        </ul>
+      </div>
+
+      <div class="col-6 col-md-2 mb-3">
+        <h5>Section</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
+        </ul>
+      </div>
+
+      <div class="col-6 col-md-2 mb-3">
+        <h5>Section</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
+        </ul>
+      </div>
+
+      <div class="col-md-5 offset-md-1 mb-3">
+        <form>
+          <h5>Subscribe to our newsletter</h5>
+          <p>Monthly digest of what's new and exciting from us.</p>
+          <div class="d-flex flex-column flex-sm-row w-100 gap-2">
+            <label for="newsletter1" class="visually-hidden">Email address</label>
+            <input id="newsletter1" type="text" class="form-control" placeholder="Email address">
+            <button class="btn btn-secondary" type="button">Subscribe</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
+      <p>© 2023 Company, Inc. All rights reserved.</p>
+      <ul class="list-unstyled d-flex">
+        <li class="ms-3"><a class="link-body-emphasis" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#twitter"></use></svg></a></li>
+        <li class="ms-3"><a class="link-body-emphasis" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#instagram"></use></svg></a></li>
+        <li class="ms-3"><a class="link-body-emphasis" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#facebook"></use></svg></a></li>
+      </ul>
+    </div>
+  </footer>
+</div>
+<!-- Bootstrap JavaScript ve Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
