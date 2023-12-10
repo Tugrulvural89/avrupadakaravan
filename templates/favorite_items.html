@@ -1,0 +1,28 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% block title %}Avrupada Karavan Beğenilen Araçlar {% endblock title %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2 class="mb-4">Favori Ürünlerim</h2>
+        <div class="row">
+            {% for favorite in favorites %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="{{ favorite.product.images.all.first.image.url }}" class="card-img-top" alt="{{ favorite.product.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ favorite.product.title }}</h5>
+                            <p class="card-text">{{ favorite.product.description|truncatewords_html:30 }}</p>
+                            <a href="{% url 'car_detail_page' product_id=favorite.product.id %}" class="btn btn-primary">Detaylar</a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-center">Henüz favori ürün eklenmemiş.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+
+{% endblock content %}

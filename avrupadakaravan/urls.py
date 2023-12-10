@@ -15,18 +15,27 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from avrupada_karavan import views
 from django.conf import settings
 from django.conf.urls.static import static
 
 
-urlpatterns = [
+urlpatterns = ([
     path("admin/", admin.site.urls),
     path("", views.main_page, name="main_page"),
     path("search/", views.search_result_page, name="search_result_page"),
-    path("detail/", views.car_detail_page, name="car_detail_page"),
-    path("login/", views.login, name="login"),
+    path("detail/<int:product_id>", views.car_detail_page, name="car_detail_page"),
+    path("login/", views.login_view, name="login"),
+    path("logout/", views.logout_view, name="logout"),
     path("register/", views.register, name="register"),
-
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path("blog/", views.blog_main, name="blog_main"),
+    path("blog/<slug:slug>", views.blog_detail, name="blog_detail"),
+    path("contact/", views.contact, name="contact"),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
+    path('nasil-calisir/', views.how_works, name="howworks"),
+    path('favorite/<int:product_id>/', views.toggle_favorites, name='toggle_favorite'),
+    path('favoriler/', views.user_favorites, name="user_favorites"),
+    path('subscribe/', views.subscribe, name="subscribe"),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+               + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT))

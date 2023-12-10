@@ -15,7 +15,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -25,8 +24,7 @@ SECRET_KEY = "django-insecure-9lxf$d_#9n%iuplc&dz!_b_gipv65z3(!b*s7u@7226(xs(sk6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['fea8-31-223-100-140.ngrok-free.app','localhost','127.0.0.1', 'a4a9-31-223-100-140.ngrok-free.app']
-
+ALLOWED_HOSTS = ['fea8-31-223-100-140.ngrok-free.app', 'localhost', '127.0.0.1', 'a4a9-31-223-100-140.ngrok-free.app']
 
 # Application definition
 
@@ -39,7 +37,13 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'avrupada_karavan.apps.AvrupadaKaravanConfig',
     'bootstrap5',
+    'ckeditor',
+    'ckeditor_uploader',
+    'django_user_agents',
+    'django_filters',
 ]
+
+MAINTENANCE_MODE = False
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -49,7 +53,16 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'django_user_agents.middleware.UserAgentMiddleware',
+    'avrupada_karavan.middleware.MaintenanceModeMiddleware',
 ]
+
+
+# settings.py
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Varsayılan oturum motoru
+SESSION_COOKIE_AGE = 1209600  # Oturum cookie'sinin süresi, örneğin 2 hafta (saniye cinsinden)
+
+
 
 ROOT_URLCONF = "avrupadakaravan.urls"
 
@@ -64,13 +77,14 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                'avrupada_karavan.context_processors.subscription_form',
+                'avrupada_karavan.context_processors.footer_menu',
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = "avrupadakaravan.wsgi.application"
-
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -81,7 +95,6 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -101,32 +114,38 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "tr-TR"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = 'Europe/Istanbul'
 
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 
 STATIC_URL = "static/"
+
 MEDIA_URL = "media/"
+
 MEDIA_ROOT = BASE_DIR / "media"
+
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    "/var/www/static/",
 ]
-print(STATIC_URL, MEDIA_URL)
+
+STATICFILES_FINDERS = [
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+CKEDITOR_UPLOAD_PATH = 'content/ckeditor/'

@@ -1,58 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Register Form</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap JavaScript ve Popper.js (gerektiğinde) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Icons for email and password icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-</head>
-<body class="d-flex justify-content-center align-items-center" style="height: 100vh; background-color: #f8f9fa;">
+{% extends 'base/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+
+
+{% block title %}Avrupada Karavan Üyelik Sayfası {% endblock title %}
+{% block content %}
+     <div class="d-flex justify-content-center align-items-center mx-auto mt-5 mb-5 text-center">
 <div class="card" style="width: 400px; border-radius:15px; background-color: #f0f0f0;">
     <div class="card-body">
         <h3 class="card-title text-center">
-            Register
+            Üyelik Formu
         </h3>
         <p class="text-muted text-center">
-            Create your account
+            Hesabını Oluştur
         </p>
-        <form>
-            <div class="mb-3">
-                <div class="input-group">
-                    <span class="input-group-text">
-                         <span class="material-icons">person</span>
-                    </span>
-                         <input type="text" class="form-control" placeholder="Full Name" aria-label="Full Name">
-                </div>
-            </div>
-            <div class="mb-3">
-                <div class="input-group">
-                    <span class="input-group-text">
-                         <span class="material-icons">email</span>
-                    </span>
-                         <input type="email" class="form-control" placeholder="Email" aria-label="Email">
-                </div>
-            </div>
-             <div class="mb-3">
-                    <div class="input-group">
-                        <span class="input-group-text">
-                            <span class="material-icons">lock</span>
-                        </span>
-                        <input type="password" class="form-control" placeholder="Password" aria-label="Password">
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-success w-100 mb-3">Register</button>
-        </form>
-        <p class="text-center">Already have an account? <a href="{% url 'login' %}">Login</a></p>
-        <p class="text-center">Go to home <a href="{% url 'main_page' %}">Login</a></p>
+       <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+    <div class="input-group w-100 justify-content-center">
+            <span class="input-group-text">
+                 <span class="material-icons">verified_user</span>
+            </span>
+            <input type="text" class="form-control" id="{{ form.username.id_form_label }} name="{{ form.username.html_name }} placeholder="Kullanıcı Adı" />
+        </div>
+        {% if form.username.errors %}
+            <div class="alert alert-danger">{{ form.username.errors }}</div>
+        {% endif %}
+
+    </div>
+           <div class="mb-3">
+                  <div class="input-group w-100 justify-content-center">
+            <span class="input-group-text">
+                 <span class="material-icons">email</span>
+            </span>
+            <input type="email" class="form-control" id="{{ form.email.id_for_label }}" name="{{ form.email.html_name }}" placeholder="Email" value="{{ form.email.value|default_if_none:'' }}">
+        </div>
+        {% if form.email.errors %}
+            <div class="alert alert-danger">{{ form.email.errors }}</div>
+        {% endif %}
+           </div>
+      <div class="mb-3">
+        <div class="input-group w-100 justify-content-center">
+            <span class="input-group-text">
+                <span class="material-icons">lock</span>
+            </span>
+             <input type="password" class="form-control" id="{{ form.password1.id_for_label }}" name="{{ form.password1.html_name }}" placeholder="Şifre">
+        </div>
+        {% if form.password1.errors %}
+            <div class="alert alert-danger">{{ form.password1.errors }}</div>
+        {% endif %}
+    </div>
+           <div class="mb-3">
+        <div class="input-group w-100 justify-content-center">
+            <span class="input-group-text">
+                <span class="material-icons">lock</span>
+            </span>
+             <input type="password" class="form-control" id="{{ form.password2.id_for_label }}" name="{{ form.password2.html_name }}" placeholder="Tekrar Şifre">
+        </div>
+        {% if form.password2.errors %}
+            <div class="alert alert-danger">{{ form.password2.errors }}</div>
+        {% endif %}
+    </div>
+
+    <button type="submit" class="btn btn-success w-100 mb-3">Üye Ol</button>
+</form>
+        <p class="text-center">Zaten hesabın var mı?<a href="{% url 'login' %}"> Giriş</a></p>
+        <p class="text-center">Gezmeye devam et <a href="{% url 'main_page' %}"> Anasayfa</a></p>
     </div>
 </div>
-<!-- Bootstrap JavaScript ve Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-</body>
-</html>
+     </div>
+{% endblock content %}

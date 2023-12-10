@@ -1,0 +1,30 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+
+
+{% block title %}Avrupada Karavan Arama Sonuç {% endblock title %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Blog Post -->
+            <article>
+                <header class="mb-4">
+                    <h1 class="fw-bolder mb-1">{{ post.title }}</h1>
+                    <div class="text-muted fst-italic mb-2"> {{ post.create_at|date:"Y-m-d" }}</div>
+                    <a href="#" class="badge bg-secondary text-decoration-none link-light">{{ post.category }}</a>
+                </header>
+
+                <figure class="mb-4"><img class="img-fluid rounded" src="{{ post.image.url }}" alt="{{ post.title }}"></figure>
+
+                <section class="mb-5">
+                    <p class="fs-5 mb-4">{{ post.description|safe }}</p>
+                </section>
+            </article>
+
+        </div>
+    </div>
+</div>
+{% endblock content %}

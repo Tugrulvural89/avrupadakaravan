@@ -1,0 +1,59 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+
+
+{% block title %}Avrupada Karavan Blog Haberler Ana Sayfa {% endblock title %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Blog İçerikleri -->
+        <div class="col-md-8">
+            <div class="row">
+                {% for content in contents %}
+                <!-- Tek bir blog yazısı -->
+                <div class="col-12 mb-4">
+                    <div class="card">
+                        <img src="{{ content.image.url }}" class="card-img-top" alt="{{ content.alt_text }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ content.title }}</h5>
+                            <p class="card-text">{{ content.description|truncatewords_html:20|safe}}</p>
+                            <a href="{% url 'blog_detail' slug=content.slug %}" class="btn btn-success">Devamını Oku</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Diğer blog yazıları benzer şekilde eklenir -->
+                {% endfor %}
+            </div>
+
+            <!-- Paginator -->
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled">
+                        <a class="?page=1" href="#" tabindex="-1">&laquo; İlk</a>
+                    </li>
+                    {% if contents.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ contents.next_page_number }}">sonraki</a>
+                        <a class="page-link" href="?page={{ contents.paginator.num_pages }}">Enson &raquo;</a>
+                    </li>
+                   {% endif %}
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Yan Menü (Sidebar) -->
+        <div class="col-md-4">
+            <div class="p-4 mb-3 bg-light rounded">
+                <h4 class="font-italic">Çok Okunanlar</h4>
+                <ol class="list-unstyled">
+                    {% for content in contents %}
+                    <li><a href="{% url 'blog_detail' slug=content.slug %}">{{ content.title }}</a></li>
+                    <!-- Diğer başlıklar -->
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
