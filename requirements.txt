@@ -18,3 +18,5 @@ sqlparse==0.4.4
 ua-parser==0.18.0
 urllib3==2.1.0
 user-agents==2.2.0
+
+python-dotenv~=1.0.0
