@@ -64,7 +64,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">{{ product.title }}</h5>
                                 <p class="card-text">{{ product.description|truncatewords_html:50 }}</p>
-                                <p class="card-text">Fiyat {{ product.price }} €</p>
+                                <p class="card-text">Fiyat {{ product.price }} TL</p>
                                 <a href="{% url 'car_detail_page' product_id=product.id %}" class="btn btn-lg btn-secondary">Detay</a>
                             </div>
                         </div>
