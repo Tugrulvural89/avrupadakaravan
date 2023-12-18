@@ -97,7 +97,7 @@ class Product(models.Model):
     price = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{self.brand.name} {self.category.name} - {self.registration_date.year}"
+        return f"{self.id}"
 
     class Meta:
         verbose_name = "Product"
@@ -109,7 +109,7 @@ class ProductImage(models.Model):
     image = models.ImageField(upload_to='product_images/', blank=True, null=True)
 
     def __str__(self):
-        return f"Image for product: {self.product.title} - {self.pk}"
+        return str(self.pk)
 
 
 class Favorite(models.Model):
