@@ -2,6 +2,7 @@ import time
 from datetime import datetime
 
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -41,8 +42,10 @@ def search_result_page(request):
 
 def car_detail_page(request, product_id):
     product = Product.objects.get(id=product_id)
-    favorites_count = Favorite.objects.filter(user=request.user, product=product).count()
-
+    if request.user.is_anonymous:
+        favorites_count = 0
+    else:
+        favorites_count = Favorite.objects.filter(user=request.user, product=product).count()
     return render(request, "car_detail_page.html", {'product': product, 'favorites_count': favorites_count})
 
 
@@ -117,7 +120,7 @@ def blog_detail(request, slug=None):
     blog = get_object_or_404(BlogPage, slug=slug)
     return render(request, "blog_detail_page.html", {'post': blog})
 
-
+@login_required(login_url="/login/")
 def toggle_favorites(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     favorite, created = Favorite.objects.get_or_create(user=request.user, product=product)
@@ -125,7 +128,7 @@ def toggle_favorites(request, product_id):
         favorite.delete()
     return redirect('car_detail_page', product_id=product_id)
 
-
+@login_required(login_url="/login/")
 def user_favorites(request):
     favorites = Favorite.objects.filter(user=request.user)
     return render(request, 'favorite_items.html', {'favorites': favorites})
