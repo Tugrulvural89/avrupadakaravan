@@ -94,7 +94,7 @@ class Product(models.Model):
     number_of_sleeping_places = models.IntegerField(default=2)
     title = models.CharField(max_length=250, default='Production')
     description = models.TextField(default='Production')
-    price = models.IntegerField(default=0)
+    price = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
         return f"{self.id}"
