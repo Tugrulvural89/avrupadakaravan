@@ -5,6 +5,14 @@
 
 {% block title %}Avrupada Karavan {{ product.title }}{% endblock title %}
 {% block content %}
+    <style>
+    .element-list {
+  border-top: 1px solid rgba(128, 128, 128, 0.5); /* Gri renk, %50 opaklık */
+  border-bottom: none;
+  border-left: none; /* Sol kenar için kenarlık yok */
+  border-right: none; /* Sağ kenar için kenarlık yok */
+}
+    </style>
 <div class="container mt-4">
     <div class="row">
         <div class="col-lg-8">
@@ -28,9 +36,9 @@
         </div>
         <div class="col-lg-4">
             <!-- Ürün Bilgileri -->
-            <h1 class="mb-3">{{  product.title }}</h1>
-             <p class="fs-4">Fiyat : {{ product.price }} TL</p>
-            <a href="https://wa.me/+905325031656" class="btn btn-success btn-lg">
+            <h5 class="mb-3" style="font-weight: 300;">{{  product.title }}</h5>
+             <p class="text" style="color: #0029a6ff; font-weight: bolder;">Fiyat : {{ product.price }} TL</p>
+            <a href="https://wa.me/+905325031656" class="btn btn-success btn-sm">
                 <i class="fa-brands fa-whatsapp"></i> &nbsp;&nbsp; WhatsApp
 
             </a>
@@ -60,6 +68,49 @@
         <span class="rating">(5.0)</span>
     </div>
 
+       <div class="col-md-6 my-3">
+           <ul style="text-decoration: none; list-style-type: none;padding: 0;margin-top:5px;margin-bottom:5px;">
+               <li class="element-list my-2">
+                   <p class="my-1" style="font-size: 15px;">
+                       <span style="font-weight: bold;">Kilometre: </span>{{ product.mileage }} KM</p>
+               </li>
+               <li class="element-list my-2">
+                  <p class="my-1" style="font-size: 15px;">
+                      <span style="font-weight: bold;">Model: </span> {{ product.brand }} </p>
+               </li>
+               <li class="element-list my-2">
+                  <p class="my-1" style="font-size: 15px;">
+                      <span style="font-weight: bold;">Kayıt Tarihi: </span> {{ product.registration_date|date:'Y' }} </p>
+               </li>
+               <li class="element-list my-2">
+                  <p class="my-1" style="font-size: 15px;">
+                      <span style="font-weight: bold;">Motor Gücü: </span>
+                       {{ product.power }} </p>
+               </li>
+               <li class="element-list my-2">
+                  <p class="my-1" style="font-size: 15px;">
+                      <span style="font-weight: bold;">Yakıt Tipi: </span>
+                       {{ product.fuel_type }} </p>
+               </li>
+               <li class="element-list my-2">
+                  <p class="my-1" style="font-size: 15px;">
+                      <span style="font-weight: bold;">Isınma: </span>
+                       {{ product.air_conditioning }} </p>
+               </li>
+               <li class="element-list my-2">
+                  <p class="my-1" style="font-size: 15px;">
+                      <span style="font-weight: bold;">Renk:</span>
+                       {{ product.color }} </p>
+               </li>
+               <li class="element-list my-2">
+                  <p class="my-1" style="font-size: 15px;">
+                      <span style="font-weight: bold;">Vites: </span>
+                       {{ product.transmission }} </p>
+               </li>
+
+           </ul>
+    </div>
+        <p style="font-weight: bolder;">Satın Alma Modeli:</p>
     <div class="icon-group mt-2">
         <span class="delivery-time">Devrevan</span>
     </div>
