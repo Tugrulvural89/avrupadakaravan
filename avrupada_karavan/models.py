@@ -94,11 +94,19 @@ class Product(models.Model):
     number_of_sleeping_places = models.IntegerField(default=2)
     title = models.CharField(max_length=250, default='Production')
     description = models.TextField(default='Production')
-    price = models.CharField(max_length=20, blank=True, null=True)
+    price = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
+    url = models.CharField(max_length=300, blank=True, null=True)
 
     def __str__(self):
         return f"{self.id}"
 
+    @property
+    def formatted_price(self):
+        if self.price is not None:
+            # Format the price as 1.000.000,00 TL
+            formatted_price = "{:,.2f}".format(self.price).replace(",", "X").replace(".", ",").replace("X", ".")
+            return f"{formatted_price} TL"
+        return "N/A"
     class Meta:
         verbose_name = "Product"
         verbose_name_plural = "Products"

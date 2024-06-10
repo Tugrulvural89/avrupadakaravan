@@ -36,8 +36,8 @@
         </div>
         <div class="col-lg-4">
             <!-- Ürün Bilgileri -->
-            <h5 class="mb-3" style="font-weight: 300;">{{  product.title }}</h5>
-             <p class="text" style="color: #0029a6ff; font-weight: bolder;">Fiyat : {{ product.price }} TL</p>
+            <h5 class="mb-3 mt-3" style="font-weight: 300;">{{  product.title }}</h5>
+             <p class="text" style="color: #0029a6ff; font-weight: bolder;">Fiyat : {{ product.formatted_price }}</p>
             <a href="https://wa.me/+905325031656" class="btn btn-success btn-sm">
                 <i class="fa-brands fa-whatsapp"></i> &nbsp;&nbsp; WhatsApp
 
@@ -107,7 +107,13 @@
                       <span style="font-weight: bold;">Vites: </span>
                        {{ product.transmission }} </p>
                </li>
-
+               {% if product.url %}
+                   <li class="element-list my-2">
+                      <a href="{{ product.url }}" class="my-2 p-4" style="font-size: 15px;" target="_blank">
+                          <span style="font-weight: bold;">İlan</span>
+                          </a>
+                   </li>
+                {% endif %}
            </ul>
     </div>
         <p style="font-weight: bolder;">Satın Alma Modeli:</p>
@@ -198,7 +204,7 @@
         </tr>
         <tr>
             <td>Fiyat</td>
-            <td>{{ product.price }}</td>
+            <td>{{ product.formatted_price }}</td>
         </tr>
         <tr>
             <td>Isınma</td>

@@ -5,6 +5,13 @@
 
 {% block title %}Avrupada Karavan Arama Sonuç {% endblock title %}
 {% block content %}
+    <style>
+    .fixed-height-image {
+    height: 200px; /* İstediğiniz sabit yüksekliği belirleyin */
+    object-fit: cover; /* Görselin kesilmesi durumunda nasıl davranacağını ayarlar */
+}
+
+    </style>
 <div class="container my-3">
         <div class="row">
             <div class="col-lg-3 my-3">
@@ -60,11 +67,11 @@
                 {% for product in product_filters.qs %}
                        <div class="col-md-4">
                         <div class="card mb-4 shadow">
-                            <img src="{{ product.images.all.first.image.url }}"  alt="Araç 1" class="card-img-top fixed-height-image">
+                             <img src="{{ product.images.all.first.image.url }}" alt="Araç 1" class="card-img-top fixed-height-image">
                             <div class="card-body">
                                 <h5 class="card-title">{{ product.title }}</h5>
                                 <p class="card-text">{{ product.description|truncatewords_html:50 }}</p>
-                                <p class="card-text">Fiyat {{ product.price }} TL</p>
+                                <p class="card-text">Fiyat {{ product.formatted_price }}</p>
                                 <a href="{% url 'car_detail_page' product_id=product.id %}" class="btn btn-lg btn-secondary">Detay</a>
                             </div>
                         </div>

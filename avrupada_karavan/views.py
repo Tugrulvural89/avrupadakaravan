@@ -27,11 +27,24 @@ def main_page(request):
     contents = BlogPage.objects.all()
     blog_main_image = SingleImagePage.objects.filter(title='main_blog').first()
     product_filters = ProductFilter(request.GET, queryset=Product.objects.all())
-    all_brands = Brand.objects.all()[0:6]
     products = Product.objects.all()[0:4]
-    return render(request, "main_page.html", {'products': products, 'images': images, 'isMobile': user_agent,
-                                              'contents': contents, 'blog_main_image': blog_main_image,
-                                              'product_filters': product_filters, 'all_brands': all_brands})
+
+    # Dinamik veriler
+    all_brands = Brand.objects.all()[0:6]
+    all_fuel_types = Product.objects.values_list('fuel_type', flat=True).distinct()
+    all_colors = Product.objects.values_list('color', flat=True).distinct()
+
+    return render(request, "main_page.html", {
+        'products': products,
+        'images': images,
+        'isMobile': user_agent,
+        'contents': contents,
+        'blog_main_image': blog_main_image,
+        'product_filters': product_filters,
+        'all_brands': all_brands,
+        'all_fuel_types': all_fuel_types,
+        'all_colors': all_colors
+    })
 
 
 def search_result_page(request):
