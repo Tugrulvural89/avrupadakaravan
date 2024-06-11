@@ -52,7 +52,10 @@ class Command(BaseCommand):
 
         def clean_price(value):
             try:
-                value = str(value).replace('\xa0', '').replace('€', '').replace('.', '').replace(',', '.').strip()
+                # Remove non-numeric characters except for commas and periods
+                value = str(value).replace('\xa0', '').replace('€', '').strip()
+                # Replace comma with period to handle European decimal format
+                value = value.replace('.', '').replace(',', '.')
                 price_numeric = Decimal(value) * 34  # Euro to TL conversion
                 return price_numeric
             except (ValueError, TypeError, InvalidOperation):
