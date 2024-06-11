@@ -10,13 +10,6 @@ from googletrans import Translator
 import random
 
 
-def convert_price_to_tl(price_euro):
-    try:
-        price_numeric = Decimal(price_euro.replace('\xa0', '').replace('€', '').replace(',', '').strip())
-        price_tl = price_numeric * 34
-        return "{:,.2f}".format(price_tl).replace(',', 'X').replace('.', ',').replace('X', '.')
-    except (ValueError, TypeError, InvalidOperation):
-        return "0,00"
 
 
 def translate_text(text, src='de', dest='tr'):
@@ -80,8 +73,8 @@ try:
             title = item.get('title', 'No title')
             translated_title = translate_text(title)
             brand = title.split(' ')[0] if title else 'No brand'
-            price_euro = item.get('price', {}).get('gross', 'No price')
-            price_tl = convert_price_to_tl(price_euro)
+            price_euro = item.get('price', {}).get('gross', 0)
+            price_tl = price_euro
             url = item.get('relativeUrl', 'No URL')
             main_image = item.get('previewImage', {}).get('src', 'No main image')
             contact_phone = item.get('contactInfo', {}).get('contactPhone', 'No contact phone')
