@@ -2,19 +2,76 @@
 {% load static %}
 {% load bootstrap5 %}
 
-
 {% block title %}Avrupada Karavan Arama Sonuç {% endblock title %}
 {% block content %}
-    <style>
+<style>
     .fixed-height-image {
-    height: 200px; /* İstediğiniz sabit yüksekliği belirleyin */
-    object-fit: cover; /* Görselin kesilmesi durumunda nasıl davranacağını ayarlar */
-}
+        object-fit: cover;
+    }
+    .filter-card {
+        background-color: white;
+        border: none;
+    }
+    .vehicle-card {
+        display: flex;
+        flex-direction: row;
+        border: 1px solid lightgray;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        padding: 10px;
+        background-color: white;
+    }
+    .vehicle-image {
+        flex: 1;
+        max-width: 150px;
+    }
+    .vehicle-details {
+        flex: 3;
+        padding: 20px;
+    }
+    .vehicle-price {
+        flex: 1;
+        text-align: right;
+        font-size: 1.5em;
+        color: #fcbc10;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .vehicle-price span {
+        font-size: 0.8em; /* Make price text smaller */
+    }
+    .vehicle-details h5 {
+        font-size: 1em; /* Make title text smaller */
+    }
+    span:hover {
+        color: black;
+    }
 
-    </style>
+    /* Media query for mobile devices */
+    @media (max-width: 768px) {
+        .vehicle-card {
+            flex-direction: column; /* Stack elements on top of each other */
+        }
+        .vehicle-image {
+            max-width: 100%; /* Make image take full width */
+            margin-bottom: 10px; /* Add some space between image and details */
+        }
+        .vehicle-details {
+            padding: 10px; /* Remove padding from details */
+        }
+        #brand-bar {
+            text-align: left;
+        }
+        .vehicle-price {
+            margin-top: 10px;
+        }
+    }
+</style>
+
 <div class="container my-3">
-        <div class="row">
-            <div class="col-lg-3 my-3">
+    <div class="row">
+        <div class="col-lg-3 my-3">
             <!-- Mobil için Filtreleme Butonu -->
             <button class="btn btn-secondary d-lg-none m-1" type="button" data-bs-toggle="collapse" data-bs-target="#mobileFilters" aria-expanded="false" aria-controls="mobileFilters">
                 Filtreler
@@ -22,67 +79,88 @@
 
             <!-- Mobil için Filtreleme Formu -->
             <div class="collapse d-lg-none" id="mobileFilters">
-                <div class="card card-body">
-                    <!-- search_filters.html -->
-
-<form action="{% url 'search_result_page' %}" method="get" class="form">
-    {% csrf_token %}
-    {% bootstrap_form product_filters.form %}
-    <div class="form-group">
-        <button type="submit" class="btn btn-success">Submit</button>
-    </div>
-</form>
+                <div class="card card-body filter-card">
+                    <form action="{% url 'search_result_page' %}" method="get" class="form">
+                        {% csrf_token %}
+                        {% bootstrap_form product_filters.form %}
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
             <!-- Desktop için Filtreleme Formu -->
             <div class="d-none d-lg-block">
-                <div class="card p-3 shadow rounded">
-                    <h3 class="text-center">Filtrele</h3>
-                    <!-- search_filters.html -->
-
-<form action="{% url 'search_result_page' %}" method="get" class="form">
-    {% csrf_token %}
-    {% bootstrap_form product_filters.form %}
-    <div class="form-group">
-        <button type="submit" class="btn btn-success">Submit</button>
-    </div>
-</form>
+                <div class="card p-3 rounded filter-card" style="border:none;">
+                    <form action="{% url 'search_result_page' %}" method="get" class="form">
+                        {% csrf_token %}
+                        {% bootstrap_form product_filters.form %}
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success">Filtrele</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-            <div class="col-12 col-lg-9 my-3">
-                <div class="card mb-5">
-  <div class="card-header">
-    Aradığın Karavanlar
-  </div>
-  <div class="card-body">
-    <h5 class="card-title">{{ product_filters.qs.count }} Araç Bulundu.</h5>
-    <p class="card-text">Karavan yolduluğuna Avrupada Karavan ile başla. Hayalindeki aracı basit, hızlı ve uzmanlarımızın görüşleriyle satın al</p>
-  </div>
-</div>
-                <!-- Araç Sonuçları -->
-                <div class="row">
-                    <!-- Araç Kartları -->
+
+        <div class="col-12 col-lg-9 my-3">
+            <div class="card mb-5">
+                <div class="card-header">
+                    Aradığın Karavanlar
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ product_filters.qs.count }} Araç Bulundu.</h5>
+                    <p class="card-text">Karavan yolduluğuna Avrupada Karavan ile başla. Hayalindeki aracı basit, hızlı ve uzmanlarımızın görüşleriyle satın al</p>
+                </div>
+            </div>
+
+            <div class="vehicle-list">
                 {% for product in product_filters.qs %}
-                       <div class="col-md-4">
-                        <div class="card mb-4 shadow">
-                             <img src="{{ product.images.all.first.image.url }}" alt="Araç 1" class="card-img-top fixed-height-image">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ product.title }}</h5>
-                                <p class="card-text">{{ product.description|truncatewords_html:50 }}</p>
-                                <p class="card-text">Fiyat {{ product.formatted_price }}</p>
-                                <a href="{% url 'car_detail_page' product_id=product.id %}" class="btn btn-lg btn-secondary">Detay</a>
+                <div class="vehicle-card">
+                    <div class="vehicle-image">
+                        <a href="{% url 'car_detail_page' product_id=product.id %}">
+                            <img src="{{ product.images.all.first.image.url }}" alt="Araç 1" class="img-fluid fixed-height-image">
+                        </a>
+                        <div class="row p-2">
+                            <div class="col-6 col-md-6">
+                                <i class="bi bi-speedometer" style="color: #6b6b6b"></i> <p style="color: #6b6b6b"> {{ product.mileage }}</p>
+                            </div>
+                            <div class="col-6 col-md-6">
+                                <i class="bi bi-gear-fill" style="color: #6b6b6b"></i> <p style="color: #6b6b6b">{{ product.transmission }}</p>
                             </div>
                         </div>
                     </div>
-                 {% endfor %}
+                    <div class="vehicle-details">
+                       <a href="{% url 'car_detail_page' product_id=product.id %}">
+                           <h4 class="card-title" style="font-family: Tahoma,serif!important;color: #1b1b1b">
+                            {{ product.title }}
+                        </h4>
+                       </a>
+                        <span>
+                            <i class="fa fa-calendar" aria-hidden="true" style="color: #1b1b1b"></i>
+                            <span style="color: #1b1b1b">{{ product.registration_date }}</span> -
+                            <i class="fa fa-bed" aria-hidden="true" style="color: #1b1b1b"></i>
+                            <span style="color: #1b1b1b">{{ product.number_of_sleeping_places }}</span>
+                        </span>
+                    </div>
+                    <div class="vehicle-price">
+                        <div class="row" style="height: 100%">
+                             <div class="col-6 col-md-12" id="brand-bar">
+                            <span style="box-shadow: 1px 2px 10px -1px rgba(204,204,204,0.75);border-radius: 12px;padding: 10px 20px 10px 20px;background-color: #e5e5e5;color: black;font-size: 11px;width: auto;">{{ product.brand }}</span>
+                        </div>
 
-
-
-                    <!-- Diğer Araç Kartları Buraya Ekleyin -->
+                        <div class="col-6 col-md-12" style=" display: flex;flex-direction: column;justify-content: flex-end;">
+                            <a href="{% url 'car_detail_page' product_id=product.id %}" class="btn btn-lg btn-outline" style="color: #deb308;">
+                                <span style="font-size:20px">{{ product.formatted_price }}</span>
+                            </a>
+                        </div>
+                        </div>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
         </div>
     </div>
+</div>
 {% endblock content %}

@@ -50,7 +50,8 @@ def main_page(request):
 def search_result_page(request):
     product_filters = ProductFilter(request.GET, queryset=Product.objects.all())
     return render(request, "search_result.html", {
-        'product_filters': product_filters})
+        'product_filters': product_filters}
+                  )
 
 
 def car_detail_page(request, product_id):
