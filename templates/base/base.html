@@ -18,6 +18,68 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 
      <style>
+          .fixed-height-image {
+        object-fit: cover;
+    }
+    .filter-card {
+        background-color: white;
+        border: none;
+    }
+    .vehicle-card {
+        display: flex;
+        flex-direction: row;
+        border: 1px solid lightgray;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        padding: 10px;
+        background-color: white;
+    }
+    .vehicle-image {
+        flex: 1;
+        max-width: 150px;
+    }
+    .vehicle-details {
+        flex: 3;
+        padding: 20px;
+    }
+    .vehicle-price {
+        flex: 1;
+        text-align: right;
+        font-size: 1.5em;
+        color: #fcbc10;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .vehicle-price span {
+        font-size: 0.8em; /* Make price text smaller */
+    }
+    .vehicle-details h5 {
+        font-size: 1em; /* Make title text smaller */
+    }
+    span:hover {
+        color: black;
+    }
+
+    /* Media query for mobile devices */
+    @media (max-width: 768px) {
+        .vehicle-card {
+            flex-direction: column; /* Stack elements on top of each other */
+        }
+        .vehicle-image {
+            max-width: 100%; /* Make image take full width */
+            margin-bottom: 10px; /* Add some space between image and details */
+        }
+        .vehicle-details {
+            padding: 10px; /* Remove padding from details */
+        }
+        #brand-bar {
+            text-align: left;
+        }
+        .vehicle-price {
+            margin-top: 10px;
+        }
+    }
    .btn-search {
         margin-top: 30px; /* Butonu aşağı kaydırma miktarını ayarlayabilirsiniz */
     }
@@ -154,7 +216,7 @@ a {
                 <img src="{% static 'avrupadakaravan.png' %}" class="img-fluid" width="170" height="75">
                 <span style="font-size: 10px;color:black;" class="el-yazisi">Paşa Galeri Garantisiyle</span>
             </a>
-            <ul class="navbar-nav me-auto" style="offset">
+            <ul class="navbar-nav me-auto">
                 <li class="nav-item ms-md-4">
                     <a class="nav-link active" aria-current="page" href="/">Anasayfa</a>
                 </li>
