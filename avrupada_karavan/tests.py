@@ -6,22 +6,15 @@ from decimal import Decimal, InvalidOperation
 import json
 import time
 import pandas as pd
-from googletrans import Translator
 import random
+from urllib.parse import urlparse, parse_qs
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from urllib.parse import urlparse, parse_qs
 
-
-
-
-def translate_text(text, src='de', dest='tr'):
-    translator = Translator()
-    try:
-        translated = translator.translate(text, src=src, dest=dest)
-        return translated.text
-    except Exception as e:
-        return f"Çeviri hatası: {e}"
-
-
-def random_wait(min_wait=1, max_wait=3):
+def random_wait(min_wait, max_wait):
     time.sleep(random.uniform(min_wait, max_wait))
 
 
@@ -31,6 +24,14 @@ def move_mouse_like_human(driver, element):
     random_wait(0.5, 1.5)
     actions.click(element).perform()
 
+def scroll_to_bottom(driver):
+    driver.execute_script("""
+        window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: 'smooth'
+        });
+    """)
+    random_wait(3, 5)
 
 options = webdriver.ChromeOptions()
 options.add_argument(
@@ -57,8 +58,7 @@ data = []
 
 try:
     base_url = 'https://suchen.mobile.de/fahrzeuge/search.html?cn=DE&gn=Essen%2C+Nordrhein-Westfalen&isSearchRequest=true&ll=51.451832%2C7.01063&rd=10&ref=srp&refId=539e3acc-5b0b-32f3-2529-9f8c7acf3e13&s=Motorhome&sb=rel&vc=Motorhome'
-
-    for page_num in range(1, 14):
+    for page_num in range(1, 2):
         print(f"Scraping page {page_num}")
         url = f"{base_url}&pageNumber={page_num}"
         driver.get(url)
@@ -68,69 +68,57 @@ try:
         return window.__INITIAL_STATE__.search.srp.data.searchResults.items;
         '''
         items = driver.execute_script(script)
-
+        scroll_to_bottom(driver)
         for item in items:
-            title = item.get('title', 'No title')
-            translated_title = translate_text(title)
-            brand = title.split(' ')[0] if title else 'No brand'
-            price_euro = item.get('price', {}).get('gross', 0)
-            price_tl = price_euro
             url = item.get('relativeUrl', 'No URL')
-            main_image = item.get('previewImage', {}).get('src', 'No main image')
-            contact_phone = item.get('contactInfo', {}).get('contactPhone', 'No contact phone')
-            seller_name = item.get('contactInfo', {}).get('name', 'No seller name')
-            category = translate_text(item.get('category', 'No category'))
-            seller_location = item.get('contactInfo', {}).get('location', 'No seller location')
+            if url != 'No URL':
+                # URL'den ID'yi çıkar
 
-            images = [main_image]
-            if 'previewThumbnails' in item:
-                images.extend([thumbnail.get('src', 'No image') for thumbnail in item['previewThumbnails']])
+                parsed_url = urlparse(url)
+                query_params = parse_qs(parsed_url.query)
+                id_value = query_params.get('id', [''])[0]  # ID parametresini al, yoksa boş string döndür
 
-            attributes = item.get('attr', {})
+                # Yeni URL oluştur
+                new_url = f'https://suchen.mobile.de/fahrzeuge/printView.html?id={id_value}'
+                random_wait(3,5)
+                # Yeni URL'yi ziyaret et
+                driver.get(new_url)
+                random_wait(4,5)
+                scroll_to_bottom(driver)
 
-            translated_attributes = {}
-            for attr_key, attr_value in attributes.items():
-                if attr_value is None:
-                    translated_attributes[attr_key] = 'No data'
-                else:
-                    if attr_key == 'loc':
-                        translated_attributes[attr_key] = attr_value
-                    else:
-                        translated_attributes[attr_key] = translate_text(attr_value)
+                random_wait(2,3)
 
-            if len(translated_title) < 15:
-                additional_info = []
-                if 'category' in item and item['category']:
-                    additional_info.append(translate_text(item['category']))
-                if 'tr' in translated_attributes and translated_attributes['tr']:
-                    additional_info.append(translated_attributes['tr'])
-                if 'pw' in translated_attributes and translated_attributes['pw']:
-                    additional_info.append(translated_attributes['pw'])
-                if 'ml' in translated_attributes and translated_attributes['ml']:
-                    additional_info.append(f"{translated_attributes['ml']} km")
-                translated_title += " " + " ".join(additional_info)
+                try:
+                    # Belirtilen div elementini bul
+                    div_element = WebDriverWait(driver, 10).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "div.g-col-8"))
+                    )
 
-            data.append({
-                'Title': translated_title,
-                'Brand': brand,
-                'Price': price_tl,
-                'URL': f"https://suchen.mobile.de{url}",
-                'Main Image': main_image,
-                'Images': ', '.join(images),
-                'Contact Phone': contact_phone,
-                'Seller Name': seller_name,
-                'Seller Location': seller_location,
-                'Category': category,
-                **translated_attributes
-            })
+                    # Div içindeki link elementini bul
+                    link_element = div_element.find_element(By.CSS_SELECTOR, "a.link--no-decoration")
+                    random_wait(1, 2)
+                    # Link elementinin target özelliğini _self olarak değiştir
+                    driver.execute_script("arguments[0].setAttribute('target', '_self')", link_element)
+
+                    # Linke tıkla
+                    link_element.click()
+
+                    # Yeni sayfanın yüklenmesini bekle
+                    WebDriverWait(driver, 10).until(
+                        EC.staleness_of(div_element)
+                    )
+                    random_wait(2, 4)
+                    print(f"Başarıyla tıklandı ve yönlendirildi: {driver.current_url}")
+
+                except Exception as e:
+                    print(f"Hata oluştu: {str(e)}")
 
     print(f"Total items scraped: {len(data)}")
-
 
 finally:
     driver.quit()
 
-df = pd.DataFrame(data)
-print(df.head())  # Print first few rows to ensure DataFrame is correct
-df.to_excel('vehicle_data.xlsx', index=False)
+#df = pd.DataFrame(data)
+#print(df.head())  # Print first few rows to ensure DataFrame is correct
+#df.to_excel('vehicle_data.xlsx', index=False)
 print("Data saved to vehicle_data.xlsx")

@@ -1,6 +1,7 @@
 {% extends 'base/base.html' %}
 {% load static %}
 {% load bootstrap5 %}
+{% load custom_filters %}
 
 
 {% block title %}Avrupada Karavan {{ product.title }}{% endblock title %}
@@ -108,8 +109,9 @@
                        {{ product.transmission }} </p>
                </li>
                {% if product.url %}
+
                    <li class="element-list my-2">
-                      <a href="{{ product.url }}" class="my-2 p-4" style="font-size: 15px;" target="_blank">
+                      <a href="{{ product.url|transform_product_url }}" class="my-2 p-4" style="font-size: 15px;" target="_blank">
                           <span style="font-weight: bold;">İlan</span>
                           </a>
                    </li>

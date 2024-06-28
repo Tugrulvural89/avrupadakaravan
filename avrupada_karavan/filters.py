@@ -26,3 +26,6 @@ class ProductFilter(django_filters.FilterSet):
         model = Product
         fields = ['brand', 'category', 'mileage', 'registration_year', 'power', 'fuel_type', 'transmission', 'color',
                   'min_price', 'max_price', 'title']
+
+
+

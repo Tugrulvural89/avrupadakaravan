@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'django_user_agents',
     'django_filters',
+    'avrupada_karavan.templatetags',
 ]
 
 MAINTENANCE_MODE = os.environ.get('MAINTENANCE_MODE') == 'True'
