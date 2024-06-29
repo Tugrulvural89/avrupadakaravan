@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from ckeditor.fields import RichTextField
 from django.template.defaultfilters import slugify
+from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 """
@@ -76,37 +77,46 @@ class Brand(models.Model):
         return self.name
 
 
-# Product model
 class Product(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)  # ForeignKey relationship to Category
-    brand = models.ForeignKey(Brand, on_delete=models.SET_NULL, null=True)  # ForeignKey relationship to Brand
-    mileage = models.IntegerField(help_text='in kilometers')
-    transmission = models.CharField(max_length=100)
-    registration_date = models.DateField()
-    power = models.CharField(max_length=50, help_text='in kW (horsepower)')
-    fuel_type = models.CharField(max_length=50)
-    number_of_owners = models.IntegerField(default=1)
-    permissible_gross_weight = models.IntegerField(help_text='in kilograms')
-    HU = models.DateField(blank=True, null=True)  # General inspection date
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    brand = models.ForeignKey(Brand, on_delete=models.SET_NULL, null=True)
+    title = models.CharField(max_length=250)
+    price = models.DecimalField(max_digits=12, decimal_places=2)
+    description = RichTextField()
+    features = ArrayField(models.CharField(max_length=100), blank=True, null=True)
+    mileage = models.IntegerField(help_text='in kilometers', null=True, blank=True)
+    power = models.CharField(max_length=50, help_text='in kW (horsepower)', null=True, blank=True)
+    fuel_type = models.CharField(max_length=50, null=True, blank=True)
+    transmission = models.CharField(max_length=100, null=True, blank=True)
+    emission_class = models.CharField(max_length=50, null=True, blank=True)
+    emission_sticker = models.CharField(max_length=50, null=True, blank=True)
+    registration_date = models.DateField(null=True, blank=True)
+    number_of_owners = models.IntegerField(default=1, null=True, blank=True)
+    permissible_gross_weight = models.IntegerField(help_text='in kilograms', null=True, blank=True)
+    HU = models.DateField(blank=True, null=True)
     air_conditioning = models.CharField(max_length=100, blank=True)
-    color = models.CharField(max_length=50, blank=True)
-    axles = models.IntegerField(default=2)
+    parking_assists = models.CharField(max_length=100, blank=True)
+    color = models.CharField(max_length=50, null=True, blank=True)
+    axles = models.IntegerField(default=2, null=True, blank=True)
     number_of_sleeping_places = models.IntegerField(default=2)
-    title = models.CharField(max_length=250, default='Production')
-    description = models.TextField(default='Production')
-    price = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
-    url = models.CharField(max_length=300, blank=True, null=True)
+    vehicle_length = models.IntegerField(help_text='in millimeters', null=True, blank=True)
+    vehicle_width = models.IntegerField(help_text='in millimeters', null=True, blank=True)
+    vehicle_height = models.IntegerField(help_text='in millimeters', null=True, blank=True)
+    bed_types = models.CharField(max_length=100, null=True, blank=True)
+    seating_groups = models.CharField(max_length=100, null=True, blank=True)
+    url = models.CharField(max_length=300, null=True, blank=True)
+    attributes = models.JSONField(default=dict, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.id}"
+        return f"{self.title}"
 
     @property
     def formatted_price(self):
         if self.price is not None:
-            # Format the price as 1.000.000,00 TL
             formatted_price = "{:,.2f}".format(self.price).replace(",", "X").replace(".", ",").replace("X", ".")
             return f"{formatted_price} TL"
         return "N/A"
+
     class Meta:
         verbose_name = "Product"
         verbose_name_plural = "Products"

@@ -74,12 +74,14 @@
                             {{ product.title }}
                         </h4>
                        </a>
-                        <span>
-                            <i class="fa fa-calendar" aria-hidden="true" style="color: #1b1b1b"></i>
-                            <span style="color: #1b1b1b">{{ product.registration_date }}</span> -
-                            <i class="fa fa-bed" aria-hidden="true" style="color: #1b1b1b"></i>
-                            <span style="color: #1b1b1b">{{ product.number_of_sleeping_places }}</span>
+                        <div class="col col-md-12" style="margin-top: 15px;">
+                            <span>
+                            <i class="fa fa-calendar fa-sm" aria-hidden="true" style="color: #6b6b6b"></i>
+                            <span style="color: #6b6b6b;font-size: 12px">{{ product.registration_date }}</span> -
+                            <i class="fa fa-bed fa-sm" aria-hidden="true" style="color: #6b6b6b"></i>
+                            <span style="color: #6b6b6b;font-size: 12px">{{ product.number_of_sleeping_places }}</span>
                         </span>
+                        </div>
                     </div>
                     <div class="vehicle-price">
                         <div class="row" style="height: 100%">
@@ -89,7 +91,7 @@
 
                         <div class="col-6 col-md-12" style=" display: flex;flex-direction: column;justify-content: flex-end;">
                             <a href="{% url 'car_detail_page' product_id=product.id %}" class="btn btn-lg btn-outline" style="color: #deb308;">
-                                <span style="font-size:20px">{{ product.formatted_price }}</span>
+                                <span style="font-size:15px">{{ product.formatted_price }}</span>
                             </a>
                         </div>
                         </div>

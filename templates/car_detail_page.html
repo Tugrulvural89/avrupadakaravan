@@ -133,11 +133,110 @@
 
         </div>
 
+        <div class="container">
+            <div class="row">
+                <div class="col col-md-6">
+                    <div class="card mt-5">
+                            <div class="card-header fw-bold" style="background-color: color(srgb 0.1045 0.5283 0.3279);color: white;">
+                                Özellikler
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                {% for feature in product.features %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ feature }}
+                                    {% if feature %}
+                                    <span class="badge bg-success rounded-pill">✓</span>
+                                    {% else %}
+                                    <span class="badge bg-danger rounded-pill">✗</span>
+                                    {% endif %}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                </div>
+               <div class="col col-md-6">
+    <div class="card mt-5 rounded-3">
+        <div class="card-header bg-success text-white">
+            <h6 class="mb-0 fw-bold">Teknik Bilgiler</h6>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped table-hover mb-0">
+                <thead>
+                    <tr class="bg-light">
+                        <th class="py-1">Özellik Türü</th>
+                        <th class="py-1">Özellik Değeri</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="py-1">Güç</td>
+                        <td class="py-1">{{ product.power }}</td>
+                    </tr>
+                    <tr>
+                        <td class="py-1">Yakıt</td>
+                        <td class="py-1">{{ product.fuel_type }}</td>
+                    </tr>
+                    <tr>
+                        <td class="py-1">Kayıt Tarihi</td>
+                        <td class="py-1">{{ product.registration_date|date:'Y' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="py-1">KM</td>
+                        <td class="py-1">{{ product.mileage }}</td>
+                    </tr>
+                    <tr>
+                        <td class="py-1">Fiyat</td>
+                        <td class="py-1">{{ product.formatted_price }}</td>
+                    </tr>
+                    <tr>
+                        <td class="py-1">Isınma</td>
+                        <td class="py-1">{{ product.air_conditioning }}</td>
+                    </tr>
+                    <tr>
+                        <td class="py-1">Aks</td>
+                        <td class="py-1">{{ product.axles }}</td>
+                    </tr>
+                    <tr>
+                        <td class="py-1">Marka</td>
+                        <td class="py-1">{{ product.brand }}</td>
+                    </tr>
+                    <tr>
+                        <td class="py-1">Kategori</td>
+                        <td class="py-1">{{ product.category }}</td>
+                    </tr>
+                    <tr>
+                        <td class="py-1">Renk</td>
+                        <td class="py-1">{{ product.color }}</td>
+                    </tr>
+                    <tr>
+                        <td class="py-1">Oturma Sayısı</td>
+                        <td class="py-1">{{ product.number_of_owners }}</td>
+                    </tr>
+                    <tr>
+                        <td class="py-1">Ağırlık</td>
+                        <td class="py-1">{{ product.permissible_gross_weight }}</td>
+                    </tr>
+                    <tr>
+                        <td class="py-1">Vites</td>
+                        <td class="py-1">{{ product.transmission }}</td>
+                    </tr>
+                    <tr>
+                        <td class="py-1">Uyguma Alanı</td>
+                        <td class="py-1">{{ product.number_of_sleeping_places }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
+
+            </div>
+        </div>
 
     <div class="container">
         <div class="col-lg-12">
-            <div class="card shadow mt-5">
+            <div class="card  mt-5">
                 <div class="row justify-content-center m-2">
                     <div class="col-6 col-md-3">
                         <div class="d-flex align-items-center">
@@ -180,80 +279,12 @@
         </div>
     </div>
 
-    <div class="container">
-        <div class="card shadow mt-3 mb-3">
-            <table class="table table-striped table-hover p-3">
-    <tbody>
-        <tr>
-            <th>Özellik Türü</th>
-            <th>Özellik Değeri</th>
-        </tr>
-        <tr>
-            <td>Güç</td>
-            <td>{{ product.power }}</td>
-        </tr>
-        <tr>
-            <td>Yakıt</td>
-            <td>{{ product.fuel_type }}</td>
-        </tr>
-        <tr>
-            <td>Kayıt Tarihi</td>
-            <td>{{ product.registration_date|date:'Y' }}</td>
-        </tr>
-        <tr>
-            <td>KM</td>
-            <td>{{ product.mileage }}</td>
-        </tr>
-        <tr>
-            <td>Fiyat</td>
-            <td>{{ product.formatted_price }}</td>
-        </tr>
-        <tr>
-            <td>Isınma</td>
-            <td>{{ product.air_conditioning }}</td>
-        </tr>
-        <tr>
-            <td>Aks</td>
-            <td>{{ product.axles }}</td>
-        </tr>
-        <tr>
-            <td>Marka</td>
-            <td>{{ product.brand }}</td>
-        </tr>
-        <tr>
-            <td>Kategori</td>
-            <td>{{ product.category }}</td>
-        </tr>
-        <tr>
-            <td>Renk</td>
-            <td>{{ product.color }}</td>
-        </tr>
-        <tr>
-            <td>Oturma Sayısı</td>
-            <td>{{ product.number_of_owners }}</td>
-        </tr>
-        <tr>
-            <td>Ağırlık</td>
-            <td>{{ product.permissible_gross_weight }}</td>
-        </tr>
-        <tr>
-            <td>Vites</td>
-            <td>{{ product.transmission }}</td>
-        </tr>
-        <tr>
-            <td>Uyguma Alanı</td>
-            <td>{{ product.number_of_sleeping_places }}</td>
-        </tr>
-    </tbody>
-</table>
 
-        </div>
-    </div>
 
 
     <!-- description widget -->
      <div class="col-lg-12 mt-3 mb-3">
-            <div class="card shadow p-5">
+            <div class="card p-5">
                 <h3 class="title">Açıklama</h3>
                 <p class="">
                     {{ product.description }}
