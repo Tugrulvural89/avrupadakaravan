@@ -30,7 +30,7 @@ class Command(BaseCommand):
             params = {
                 'q': text,
                 'target': target,
-                'key': "AIzaSyC0Rx9i2G_dNmykdrfXq1_C0pb9x3BEXaw"
+                'key': os.environ.get('GD_API')
             }
 
             response = requests.get(url, params=params)
