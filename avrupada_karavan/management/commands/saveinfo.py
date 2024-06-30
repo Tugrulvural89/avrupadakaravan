@@ -138,7 +138,8 @@ class Command(BaseCommand):
                 if len(description) < 4 or description is None:
                     description = generate_description(row, attributes)
                 description = translate_text(description)
-
+                if description is None:
+                    description = row['Title']
 
 
                 # Create Product
