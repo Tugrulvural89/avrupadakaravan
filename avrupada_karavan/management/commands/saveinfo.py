@@ -117,11 +117,12 @@ class Command(BaseCommand):
                 permissible_gross_weight=clean_value(attributes.get('licensedWeight', '0').split()[0])
             )
 
+
         for _, row in df.iterrows():
             attributes = eval(row['Attributes']) if pd.notna(row['Attributes']) else {}
             # Parse features
             features = translate_text(row['Features'].strip('[]').replace("'", "")).split(', ') if pd.notna(row['Features']) else []
-            if len(features) > 2:
+            if len(features) > 3:
 
                 # Get or create Category from attributes
                 category_name = translate_text(attributes.get('category', 'Default Category'))
@@ -133,11 +134,12 @@ class Command(BaseCommand):
                     name=brand_name,
                     defaults={'founded_year': datetime.now().year}
                 )
-
-                description = translate_text(row['Description'])
-
-                if len(description) < 1:
+                description = row['Description']
+                if len(description) < 4 or description is None:
                     description = generate_description(row, attributes)
+                description = translate_text(description)
+
+
 
                 # Create Product
                 product = Product.objects.create(
@@ -180,4 +182,4 @@ class Command(BaseCommand):
                         if image_file:
                             ProductImage.objects.create(product=product, image=image_file)
 
-            self.stdout.write(self.style.SUCCESS(f'Successfully imported product: {product.title}'))
+                self.stdout.write(self.style.SUCCESS(f'Successfully imported product: {product.title}'))
