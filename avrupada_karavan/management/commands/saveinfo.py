@@ -9,6 +9,8 @@ from django.core.management.base import BaseCommand
 from django.utils.text import slugify
 from datetime import datetime
 from avrupada_karavan.models import Product, Category, Brand, ProductImage
+import requests
+
 
 class Command(BaseCommand):
     help = 'Import data from Excel file to Django database'
@@ -16,9 +18,33 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('excel_file', type=str, help='Path to the Excel file')
 
+
+
     def handle(self, *args, **options):
         excel_file = options['excel_file']
         df = pd.read_excel(excel_file)
+
+        def translate_text(text, target='tr'):
+            url = "https://translation.googleapis.com/language/translate/v2"
+
+            params = {
+                'q': text,
+                'target': target,
+                'key': "AIzaSyC0Rx9i2G_dNmykdrfXq1_C0pb9x3BEXaw"
+            }
+
+            response = requests.get(url, params=params)
+
+            if response.status_code == 200:
+                result = response.json()
+                translated_text = result['data']['translations'][0]['translatedText']
+                print("Text: {}".format(text))
+                print("Translation: {}".format(translated_text))
+                return translated_text
+            else:
+                print(f"Error: {response.status_code}, {response.text}")
+                return None
+
 
         def clean_value(value, default=0):
             try:
@@ -31,7 +57,7 @@ class Command(BaseCommand):
 
         def clean_price(value):
             try:
-                value = str(value).replace('\xa0', '').replace('€', '').strip()
+                value = str(value).replace('\xa0', '').replace('€', '').replace('(Brutto)','').strip()
                 value = value.replace('.', '').replace(',', '.')
                 price_numeric = Decimal(value) * 34  # Euro to TL conversion
                 return price_numeric
@@ -78,9 +104,9 @@ class Command(BaseCommand):
                 "Yakıt türü {fuel_type}, rengi {color}, {axles} akslı ve izin verilen toplam ağırlığı {permissible_gross_weight} kg'dir."
             )
             return description_template.format(
-                brand=row['Başlık'].split()[0],
+                brand=row['Title'].split()[0],
                 number_of_sleeping_places=attributes.get('numberOfBunks', 'N/A'),
-                price=clean_price(row['Fiyat']),
+                price=clean_price(row['Price']),
                 mileage=clean_value(attributes.get('mileage', '0').split()[0]),
                 transmission=attributes.get('transmission', 'N/A'),
                 registration_date=attributes.get('firstRegistration', 'N/A'),
@@ -92,66 +118,66 @@ class Command(BaseCommand):
             )
 
         for _, row in df.iterrows():
-            attributes = eval(row['Öznitelikler']) if pd.notna(row['Öznitelikler']) else {}
-
-            # Get or create Category from attributes
-            category_name = attributes.get('category', 'Default Category')
-            category, _ = Category.objects.get_or_create(name=category_name)
-
-            # Get or create Brand from the first word of the title
-            brand_name = row['Başlık'].split()[0]
-            brand, _ = Brand.objects.get_or_create(
-                name=brand_name,
-                defaults={'founded_year': datetime.now().year}
-            )
-
+            attributes = eval(row['Attributes']) if pd.notna(row['Attributes']) else {}
             # Parse features
-            features = row['Özellikler'].strip('[]').replace("'", "").split(', ') if pd.notna(row['Özellikler']) else []
+            features = translate_text(row['Features'].strip('[]').replace("'", "")).split(', ') if pd.notna(row['Features']) else []
+            if len(features) > 2:
 
-            description = row['Açıklama']
+                # Get or create Category from attributes
+                category_name = translate_text(attributes.get('category', 'Default Category'))
+                category, _ = Category.objects.get_or_create(name=category_name)
 
-            if len(description) < 1:
-                description = generate_description(row, attributes)
+                # Get or create Brand from the first word of the title
+                brand_name = row['Title'].split()[0]
+                brand, _ = Brand.objects.get_or_create(
+                    name=brand_name,
+                    defaults={'founded_year': datetime.now().year}
+                )
 
-            # Create Product
-            product = Product.objects.create(
-                category=category,
-                brand=brand,
-                title=row['Başlık'],
-                price=clean_price(row['Fiyat']),
-                description=description,
-                features=features,
-                mileage=clean_value(attributes.get('mileage', '0').split()[0]),
-                power=attributes.get('power', ''),
-                fuel_type=attributes.get('fuel', ''),
-                transmission=attributes.get('transmission', ''),
-                emission_class=attributes.get('emissionClass', ''),
-                emission_sticker=attributes.get('emissionsSticker', ''),
-                registration_date=clean_date(attributes.get('firstRegistration', '01/2000')),
-                number_of_owners=int(attributes.get('numberOfPreviousOwners', 1)),
-                permissible_gross_weight=clean_value(attributes.get('licensedWeight', '0').split()[0]),
-                HU=datetime.now().date() if attributes.get('hu') == 'Neu' else None,
-                air_conditioning=attributes.get('climatisation', ''),
-                parking_assists=attributes.get('parkAssists', ''),
-                color=attributes.get('color', ''),
-                axles=int(attributes.get('axles', 2)),
-                number_of_sleeping_places=int(attributes.get('numberOfBunks', 2)),
-                vehicle_length=clean_value(attributes.get('vehicleLength', '0').split()[0]),
-                vehicle_width=clean_value(attributes.get('vehicleWidth', '0').split()[0]),
-                vehicle_height=clean_value(attributes.get('vehicleHeight', '0').split()[0]),
-                bed_types=attributes.get('bedTypes', ''),
-                seating_groups=attributes.get('seatingGroups', ''),
-                url=row.get('Url', ''),
-                attributes=attributes
-            )
+                description = translate_text(row['Description'])
 
-            # Create ProductImages
-            images = row['Görseller'].strip('[]').replace("'", "").split(', ') if pd.notna(row['Görseller']) else []
-            for image_url in images:
-                image_url = image_url.strip()  # Remove any leading/trailing whitespace
-                if image_url:  # Only process non-empty URLs
-                    image_file = download_image(image_url)
-                    if image_file:
-                        ProductImage.objects.create(product=product, image=image_file)
+                if len(description) < 1:
+                    description = generate_description(row, attributes)
+
+                # Create Product
+                product = Product.objects.create(
+                    category=category,
+                    brand=brand,
+                    title=translate_text(row['Title'].replace('*', '')),
+                    price=clean_price(row['Price']),
+                    description=translate_text(description),
+                    features=features,
+                    mileage=clean_value(attributes.get('mileage', '0').split()[0]),
+                    power=attributes.get('power', '').replace('\xa0', ' '),
+                    fuel_type=translate_text(attributes.get('fuel', '')),
+                    transmission=translate_text(attributes.get('transmission', '')),
+                    emission_class=attributes.get('emissionClass', ''),
+                    emission_sticker=translate_text(attributes.get('emissionsSticker', '')),
+                    registration_date=clean_date(attributes.get('firstRegistration', '01/2000')),
+                    number_of_owners=int(attributes.get('numberOfPreviousOwners', 1)),
+                    permissible_gross_weight=clean_value(attributes.get('licensedWeight', '0').split()[0]),
+                    HU=datetime.now().date() if attributes.get('hu') == 'Neu' else None,
+                    air_conditioning=translate_text(attributes.get('climatisation', '')),
+                    parking_assists=translate_text(attributes.get('parkAssists', '')),
+                    color=translate_text(attributes.get('color', '')),
+                    axles=int(attributes.get('axles', 2)),
+                    number_of_sleeping_places=int(attributes.get('numberOfBunks', 2)),
+                    vehicle_length=clean_value(attributes.get('vehicleLength', '0').split()[0]),
+                    vehicle_width=clean_value(attributes.get('vehicleWidth', '0').split()[0]),
+                    vehicle_height=clean_value(attributes.get('vehicleHeight', '0').split()[0]),
+                    bed_types=translate_text(attributes.get('bedTypes', '')),
+                    seating_groups=translate_text(attributes.get('seatingGroups', '')),
+                    url=row.get('Url', ''),
+                    attributes=attributes
+                )
+
+                # Create ProductImages
+                images = row['Images'].strip('[]').replace("'", "").split(', ') if pd.notna(row['Images']) else []
+                for image_url in images:
+                    image_url = image_url.strip()  # Remove any leading/trailing whitespace
+                    if image_url:  # Only process non-empty URLs
+                        image_file = download_image(image_url)
+                        if image_file:
+                            ProductImage.objects.create(product=product, image=image_file)
 
             self.stdout.write(self.style.SUCCESS(f'Successfully imported product: {product.title}'))

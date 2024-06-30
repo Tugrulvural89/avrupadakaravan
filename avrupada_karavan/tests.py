@@ -92,7 +92,7 @@ def scrape_data(base_url, num_pages):
     driver = create_driver()
 
     try:
-        for page_num in range(1, num_pages + 1):
+        for page_num in range(3, num_pages + 1):
             print(f"Scraping page {page_num}")
             url = f"{base_url}&pageNumber={page_num}"
             driver.get(url)
@@ -203,7 +203,7 @@ def scrape_data(base_url, num_pages):
 
 # Ana program
 base_url = 'https://suchen.mobile.de/fahrzeuge/search.html?cn=DE&gn=Essen%2C+Nordrhein-Westfalen&isSearchRequest=true&ll=51.451832%2C7.01063&rd=10&ref=srp&refId=539e3acc-5b0b-32f3-2529-9f8c7acf3e13&s=Motorhome&sb=rel&vc=Motorhome'
-num_pages = 1
+num_pages = 3
 
 data = scrape_data(base_url, num_pages)
 

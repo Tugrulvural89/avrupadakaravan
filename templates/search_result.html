@@ -85,11 +85,11 @@
                     </div>
                     <div class="vehicle-price">
                         <div class="row" style="height: 100%">
-                             <div class="col-6 col-md-12" id="brand-bar">
+                             <div class="col-4 col-md-12" id="brand-bar">
                             <span style="box-shadow: 1px 2px 10px -1px rgba(204,204,204,0.75);border-radius: 12px;padding: 10px 20px 10px 20px;background-color: #e5e5e5;color: black;font-size: 11px;width: auto;">{{ product.brand }}</span>
                         </div>
 
-                        <div class="col-6 col-md-12" style=" display: flex;flex-direction: column;justify-content: flex-end;">
+                        <div class="col-8 col-md-12" style=" display: flex;flex-direction: column;justify-content: flex-end;">
                             <a href="{% url 'car_detail_page' product_id=product.id %}" class="btn btn-lg btn-outline" style="color: #deb308;">
                                 <span style="font-size:15px">{{ product.formatted_price }}</span>
                             </a>
