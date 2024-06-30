@@ -30,7 +30,7 @@ def main_page(request):
     products = Product.objects.all()[0:4]
 
     # Dinamik veriler
-    all_brands = Brand.objects.all().filter(image__isnull=False)
+    all_brands = Brand.objects.exclude(image__isnull=True).exclude(image__exact='')
     all_fuel_types = Product.objects.values_list('fuel_type', flat=True).distinct()
     all_colors = Product.objects.values_list('color', flat=True).distinct()
 
